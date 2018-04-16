@@ -1,0 +1,86 @@
+/****** QUERY FROM DATAWAREHOUSE FOR DAN NELSEN ******/
+SELECT [Branch]
+      ,[OrderNumber]
+      ,[Line]
+      ,[IsOpen]
+      ,[OrderStatusCode]
+      ,[Sales]
+      ,[SalesShippable]
+      ,[CommCost]
+      ,[Cost]
+      ,[OriginalCost]
+      ,[Discount]
+      ,[Item]
+      ,[ItemDesc]
+      ,[ItemDesc2]
+      ,[Quantity]
+      ,[ShipDate]
+      ,[PromiseDate]
+      ,[RequestDate]
+      ,[OrderDate]
+      ,[InvoiceDate]
+      ,[Customer]
+      ,[CustomerName]
+      ,[ShipTo]
+      ,[SalesRep]
+      ,[SalesRepName]
+      ,[Warehouse]
+      ,[JdeOrderType]
+      ,[LastStatusCode]
+      ,[LineType]
+      ,[Term]
+      ,[ShipNumber]
+      ,[SerialNumber]
+      ,[CustomerPO]
+      ,[CancelDate]
+      ,[UnitVolume]
+      ,[UnitVolumeofMeasure]
+      ,[DeliveryDate]
+      ,[WorkOrderType]
+      ,[WorkOrderNumber]
+      ,[WOFinish_WR02]
+      ,[WOSpecies_WR03]
+      ,[WOStyle_WR04]
+      ,[WebOrderNumber]
+  FROM [dwh6SQ].[dbo].[SalesDetails]
+  WHERE RequestDate >= '2018-3-01'
+  and branch in (5000,5200)
+  and OrderNumber in (123238,122162)
+  and IsOpen = 1
+  and Item not like 'SV%'
+
+
+
+  /****** QUERYING SQSITE for INFORMATION FOR DAN NELSEN  ******/
+  SELECT c.order_id
+  	  ,c.order_number
+  	  ,a.[cart_item_id]
+        ,a.[product_number] -- need to join this to the product table
+        ,a.[quantity]
+        ,a.[cart_item_status]
+        ,a.[system_number] -- system number
+        ,a.[order_id] --WID
+        ,a.[create_date]
+        ,a.[work_order_type]
+  	  ,b.[product_number]
+        ,b.[product_code]
+        ,b.[model_number]
+        ,b.[description]
+    FROM [SQSite].[dbo].[cart_item] a
+    LEFT JOIN product b on a.product_number = b.product_number
+    LEFT JOIN [order] c on a.order_id = c.order_id
+    WHERE order_number in (123238,
+  122162)
+    and a.cart_item_status not in ('D')
+    and c.order_status not in ('D')
+    and product_code not like '0-%'
+
+   -- exclude cases when systems IS NOT null and work order type is NULL
+   -- include cases when system# IS NULL and work order type is NULL
+   -- exclude SV codes
+
+   SELECT [product_number]
+        ,[product_code]
+        ,[model_number]
+        ,[description]
+    FROM [SQSite].[dbo].[product]

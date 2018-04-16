@@ -1,0 +1,41 @@
+/****** QUERY FOR SAMPLE UPDATE FOR ROD  ******/
+SELECT 'Web' as 'source'
+	  ,a.[id]
+      ,a.[order_id]
+      ,a.[line_number]
+      ,a.[sku]
+	  ,NULL as "style"
+	  ,NULL as 'finish'
+      ,a.[Part_category]
+	  ,a.[quantity]
+      ,a.[price]
+	  ,a.[create_date]
+	  ,b.[create_date]
+      ,b.[update_date]
+      ,b.[order_id]
+	  ,b.[Email]
+      ,b.[Phone]
+      ,b.[AltPhone]
+	  ,b.[Bill_First_Name]
+      ,b.[Bill_Last_Name]
+      ,b.[Bill_Address]
+      ,b.[Bill_Apt_Suite]
+      ,b.[Bill_City]
+      ,b.[Bill_State]
+      ,b.[Bill_Zip]
+      ,b.[Ship_FristName]
+      ,b.[Ship_LastName]
+      ,b.[Ship_Address]
+      ,b.[Ship_Apt_Suite]
+      ,b.[Ship_City]
+      ,b.[Ship_State]
+      ,b.[Ship_Zip]
+      ,b.[total_price]
+      ,b.[tax]
+      ,b.[freight_cost]
+      ,b.[Discount_total]
+  FROM [SQSite].[dbo].[sample_order_detail] a
+  LEFT JOIN [SQSite].[dbo].[sample_order_header] b on a.order_id = b.order_id
+  WHERE b.create_date >= '2018-02-16' and b.create_date < getdate()-1
+  -- and SKU not like '99-SDR%'
+ORDER BY b.create_date asc

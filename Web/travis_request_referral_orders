@@ -1,0 +1,21 @@
+SELECT a.sold_order_id,
+a.quote_id,
+a.order_type,
+a.order_name,
+a.customer_number,
+a.user_id,
+a.create_date,
+a.style_id,
+(a.total_price)+(a.adjust_amount)-(a.discount_amount)+(a.shipping_surcharge)+(a.delivery_charge)+(a.tax)-
+(a.total_coupon_discounted)+(a.special_promotion_value) AS 'sold_order_total'
+FROM   cliq_sold_order_header a
+LEFT JOIN customer b on a.customer_number = b.customer_number
+WHERE a.create_date >= '2016-01-03'
+and b.customer_type = 'PRO'
+ORDER BY create_date asc
+
+
+
+select top(100) *
+FROM customer
+where customer_type is not NULL

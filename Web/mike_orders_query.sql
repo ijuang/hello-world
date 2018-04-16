@@ -25,3 +25,10 @@ select
  from cliq_sold_order_header
 where create_date >= '12/31/2017'
 order by sold_order_id desc
+
+
+select
+*
+ from cliq_sold_order_header
+where create_date >= '2018-01-31'
+order by sold_order_id desc

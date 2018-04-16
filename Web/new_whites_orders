@@ -1,0 +1,127 @@
+-- This is querying only Sold Orders for bright white and cloud white styles ----
+SELECT [sold_order_id]
+      ,[order_type]
+      ,[order_number]
+      ,[order_name]
+      ,[customer_number]
+      ,[user_id]
+	  ,[create_date]
+	  ,(total_price)+(adjust_amount)-(discount_amount)+(shipping_surcharge)+(delivery_charge)+(tax)-
+	(total_coupon_discounted)+(special_promotion_value) AS 'sold_order_total'
+FROM  cliq_sold_order_header
+WHERE style_id in ('179','180','181','182','183','184','185','186','187','188','189','190','191','192','193','194','195','196','197','198')
+
+-- This is Querying from CABINET EN
+SELECT * FROM [order] a
+LEFT JOIN [cabinetorder_extension] b on a.order_id=b.cabinet_order_id
+WHERE b.style_id in ('STYLE179','STYLE180','STYLE181','STYLE182','STYLE183','STYLE184','STYLE185','STYLE186','STYLE187','STYLE188','STYLE189',
+'STYLE190','STYLE191','STYLE192','STYLE193','STYLE194','STYLE195','STYLE196','STYLE197','STYLE198')
+ORDER BY a.order_id asc
+
+
+-- This is querying JOINED data SOLD ORDER/CABINETEXT/ORDER for bright white and cloud white styles ---
+SELECT
+   a.[order_number] as 'jde_order_number'
+  ,a.[order_id] as 'wid_number'
+    ,a.[user_id]
+    ,a.[order_status]
+    ,a.[order_total]
+    ,a.[po_number]
+    ,a.[order_group_id]
+    ,a.[comments]
+    ,a.[approverNumber]
+    ,a.[release_date]
+    ,a.[jde_call]
+    ,a.[rma_claim]
+  ,b.[cabinet_order_id] as 'wid_number'
+    ,b.[branch_number]
+    ,b.[customer_name]
+    ,b.[style_id]
+    ,b.[cabinet_count]
+    ,b.[cubic_total]
+    ,b.[sold_order_id]
+    ,b.[cliq_quote_id]
+    ,b.[opportunity_id]
+    ,b.[opportunity_name]
+    ,b.[create_date] as 'order_entry_create_date'
+    ,b.[order_type]
+    ,b.[is_unassigned]
+    ,b.[weight]
+  ,c.[create_date] as 'web_sold_order_create_date'
+  ,d.[account_manager]
+    ,d.[account_manager_name]
+FROM [order] a
+LEFT JOIN [cabinetorder_extension] b on a.order_id=b.cabinet_order_id
+LEFT JOIN [cliq_sold_order_header] c on b.sold_order_id=c.sold_order_id
+LEFT JOIN [customer] d on c.customer_number = d.customer_number
+WHERE c.style_id in ('179','180','181','182','183','184','185','186','187','188','189','190','191','192','193','194','195','196','197','198')
+OR b.style_id in ('STYLE179','STYLE180','STYLE181','STYLE182','STYLE183','STYLE184','STYLE185','STYLE186','STYLE187','STYLE188','STYLE189',
+'STYLE190','STYLE191','STYLE192','STYLE193','STYLE194','STYLE195','STYLE196','STYLE197','STYLE198')
+ORDER BY a.order_id asc
+
+
+
+SELECT [order_id]
+      ,[user_id]
+      ,[order_status]
+      ,[order_total]
+      ,[po_number]
+      ,[order_number]
+      ,[order_group_id]
+      ,[comments]
+      ,[create_date]
+      ,[update_date]
+      ,[approverNumber]
+      ,[home_delivery]
+      ,[release_date]
+      ,[jde_call]
+      ,[rma_claim]
+  FROM [SQSite].[dbo].[order]
+
+  SELECT [cabinet_order_id]
+      ,[branch_number]
+      ,[customer_name]
+      ,[style_id]
+      ,[cabinet_count]
+      ,[cubic_total]
+      ,[sold_order_id]
+      ,[cliq_quote_id]
+      ,[opportunity_id]
+      ,[opportunity_name]
+      ,[create_date]
+      ,[guid]
+      ,[order_type]
+      ,[is_unassigned]
+      ,[weight]
+      ,[sample_order_id]
+  FROM [SQSite].[dbo].[cabinetorder_extension]
+
+  SELECT TOP (1000) [sold_order_id]
+      ,[order_type]
+      ,[order_number]
+      ,[order_name]
+      ,[customer_number]
+      ,[user_id]
+      ,[total_price]
+      ,[CSR]
+      ,[ACD]
+      ,[adjust_amount]
+      ,[discount]
+      ,[discount_amount]
+      ,[shipping_surcharge]
+      ,[delivery_charge]
+      ,[tax]
+      ,[payment_option]
+      ,[tracking_number]
+      ,[create_date]
+      ,[update_date]
+      ,[style_id]
+      ,[chk_profile_overwrite]
+      ,[delivery_condition]
+      ,[delivery_comment]
+      ,[total_coupon_discounted]
+      ,[special_promotion_value]
+      ,[total_price_discounted]
+      ,[adjust_amount_discounted]
+      ,[quote_id]
+  FROM [SQSite].[dbo].[cliq_sold_order_header]
