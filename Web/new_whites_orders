@@ -11,7 +11,7 @@ SELECT [sold_order_id]
 FROM  cliq_sold_order_header
 WHERE style_id in ('179','180','181','182','183','184','185','186','187','188','189','190','191','192','193','194','195','196','197','198')
 
--- This is Querying from CABINET EN
+-- This is Querying from CABINET EXTENSION
 SELECT * FROM [order] a
 LEFT JOIN [cabinetorder_extension] b on a.order_id=b.cabinet_order_id
 WHERE b.style_id in ('STYLE179','STYLE180','STYLE181','STYLE182','STYLE183','STYLE184','STYLE185','STYLE186','STYLE187','STYLE188','STYLE189',
@@ -48,6 +48,7 @@ SELECT
     ,b.[is_unassigned]
     ,b.[weight]
   ,c.[create_date] as 'web_sold_order_create_date'
+  ,d.customer_number
   ,d.[account_manager]
     ,d.[account_manager_name]
 FROM [order] a
@@ -57,7 +58,9 @@ LEFT JOIN [customer] d on c.customer_number = d.customer_number
 WHERE c.style_id in ('179','180','181','182','183','184','185','186','187','188','189','190','191','192','193','194','195','196','197','198')
 OR b.style_id in ('STYLE179','STYLE180','STYLE181','STYLE182','STYLE183','STYLE184','STYLE185','STYLE186','STYLE187','STYLE188','STYLE189',
 'STYLE190','STYLE191','STYLE192','STYLE193','STYLE194','STYLE195','STYLE196','STYLE197','STYLE198')
+AND a.order_status not in ('D')
 ORDER BY a.order_id asc
+
 
 
 

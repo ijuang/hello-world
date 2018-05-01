@@ -76,7 +76,7 @@ SELECT [Branch]
     and product_code not like '0-%'
 
    -- exclude cases when systems IS NOT null and work order type is NULL
-   -- include cases when system# IS NULL and work order type is NULL
+   -- include cases when system# IS NULL and work order type is not NULL
    -- exclude SV codes
 
    SELECT [product_number]
@@ -84,3 +84,38 @@ SELECT [Branch]
         ,[model_number]
         ,[description]
     FROM [SQSite].[dbo].[product]
+
+
+
+
+
+/******** VERSION 4/12/2018 ******************/
+SELECT c.order_id as 'web_order_id'
+    ,c.order_number as 'jde_order_id'
+    -- ,a.[cart_item_id]
+     -- ,a.[product_number] -- need to join this to the product table
+      ,a.[quantity]
+      ,a.[cart_item_status]
+      ,a.[system_number] -- system number
+      --,a.[order_id] --WID
+      --,a.[create_date]
+      ,a.[work_order_type]
+    --,b.[product_number]
+    --,b.[product_code]
+      ,b.[model_number] as ''
+      ,b.[description]
+  , CASE WHEN system_number IS NOT NULL AND work_order_type is NULL THEN 'components'
+       WHEN system_number IS NOT NULL AND work_order_type is NOT NULL THEN 'parentline'
+       WHEN system_number IS NULL and work_order_type is NULL THEN 'accessory'
+       WHEN system_number IS NULL and work_order_type IS NOT NULL THEN 'other'
+       END AS 'item_types'
+  FROM [SQSite].[dbo].[cart_item] a
+  LEFT JOIN product b on a.product_number = b.product_number
+  LEFT JOIN [order] c on a.order_id = c.order_id
+  WHERE order_number in (123238,122162)
+and a.cart_item_status not in ('D')
+  and c.order_status not in ('D')
+and product_code not like 'SV0%'
+and ((system_number IS NOT NULL AND work_order_type is NOT NULL)
+OR (system_number IS NULL and work_order_type is NULL)
+OR (system_number IS NULL and work_order_type IS NOT NULL))

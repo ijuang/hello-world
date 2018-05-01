@@ -42,4 +42,4 @@ SELECT TOP (1000) [sold_order_id]
       ,[delivery_condition]
       ,[delivery_comment]
       ,[quote_id]
-  FROM [SQSite].[dbo].[cliq_sold_order_header]
+  FROM [SQSite].[dbo].[cliq_sold_order_header] a LEFT JOIN customer b on a.customer_number = b.customer_number
